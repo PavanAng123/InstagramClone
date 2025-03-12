@@ -1,0 +1,108 @@
+<div class="feed-container">
+ 
+    <div class="search-box">
+        <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Search users..."
+            class="form-control" /> <i class="fa fa-search"></i>
+    </div>
+</div>
+
+<div *ngIf="!showonlyuserposts">
+
+<div style="margin-top: 10px;"  *ngFor="let user of filteredUsers">
+    <div *ngIf="searchQuery !== '' " (click)="selectUser(user)">
+        <div class="row">
+            <div class="col-sm-1">
+                <img [src]="user.profilePicture" alt="Profile Picture" class="profile-img" />
+            </div>
+            <div class="col-sm-11">
+                <h3 style="margin-top: 0px;">{{ user.Username }}</h3>
+            </div>
+        </div>
+        <hr />
+    </div>
+</div>
+</div>
+
+<ng-container *ngIf="filteredUsers.length === 0">
+     <app-inputandoutput [norecord1]="norecor"></app-inputandoutput>
+</ng-container>
+
+<div *ngIf="showonlyuserposts">
+
+
+    <div *ngIf="selectedUser">
+        <img [src]="selectedUser.profilePicture"/>
+        <h3>{{ selectedUser.Username }}'s Posts</h3>
+        <hr>
+    </div>
+    <div class="posts-container">
+        <div class="posts" *ngFor="let post of userPosts">
+            <div class="content">
+                <div class="profile">
+                    <img class="imgcls" [src]="post.profilePicture" alt="">
+                    <h4>{{ post.Username }}</h4>
+                </div>
+                <div class="title">
+                    <h6>{{ post.title }}</h6>
+                </div>
+
+                <!-- Image Carousel -->
+                <div *ngIf="post.imageurl && post.imageurl.length > 1" class="carousel">
+
+                    <div class="carousel-images">
+                        <img [src]="post.imageurl[post.currentIndex]" alt="Post Image" class="post-image" />
+                    </div>
+                    <button class="prev" (click)="prevSlide(post)">&#10094;</button>
+                    <button class="next" (click)="nextSlide(post)">&#10095;</button>
+
+                    <!-- Indicator Dots -->
+                    <div class="dots-container">
+                        <span *ngFor="let img of post.imageurl; let i = index" class="dot"
+                            [class.active]="i === post.currentIndex" (click)="goToSlide(post, i)">
+                        </span>
+                    </div>
+                    <div class="count">
+
+                        <p>{{post.currentIndex+1}}/{{post.imageurl.length}} </p>
+                    </div>
+                </div>
+
+                <!-- Single Image -->
+                <div *ngIf="post.imageurl && post.imageurl.length <= 1">
+                    <img [src]="post.imageurl[0]" alt="Post Image" class="post-image" />
+                </div>
+
+                <p>{{ post.content }}</p>
+            </div>
+
+            <!-- Actions: Like, Comment, Share -->
+            <!-- <div class="actions">
+                <hr>
+                <a *ngIf="!isLiked(post.id)" (click)="updateCount(post.id, true)">
+                    <img class="profilepic" src="assets/like.png">
+                    <span>{{ likedataa[post.id]?.clickCount }}</span>
+                </a>
+
+                <a *ngIf="isLiked(post.id)" (click)="updateCount(post.id, false)">
+                    <img class="profilepic" src="assets/heart.png">
+                    <span>{{ likedataa[post.id]?.clickCount }}</span>
+                </a>
+
+                <a (click)="comntsec(post.id)">
+                    <img class="profilepic" src="assets/chat.png">
+                    <span>{{ getCommentCount(post.id) }}</span>
+                </a>
+
+                <a (click)="sharePost(post.id)">
+                    <img class="profilepic" src="assets/send.png">
+                </a>
+            </div> -->
+        </div>
+
+</div>
+</div>
+
+<ng-template #noposts>
+    No Posts to display
+</ng-template>
+   

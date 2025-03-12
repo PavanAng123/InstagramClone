@@ -1,0 +1,157 @@
+<div class="cotainer">
+    <div *ngIf="posts.length>0; else noposts">
+        <div class="posts-container">
+            <div class="posts" *ngFor="let post of posts">
+                <div class="content">
+                    <div class="profile">
+                        <img class="imgcls" [src]="post.profilePicture" alt="">
+                        <h4>{{ post.Username }}</h4>
+                    </div>
+                    <div class="title">
+                        <h6>{{ post.title }}</h6>
+                    </div>
+
+                    <!-- Image Carousel -->
+                    <div *ngIf="post.imageurl && post.imageurl.length > 1" class="carousel">
+
+                        <div class="carousel-images">
+                            <img [src]="post.imageurl[post.currentIndex]" alt="Post Image" class="post-image" />
+                        </div>
+                        <button class="prev" (click)="prevSlide(post)">&#10094;</button>
+                        <button class="next" (click)="nextSlide(post)">&#10095;</button>
+
+                        <!-- Indicator Dots -->
+                        <div class="dots-container">
+                            <span *ngFor="let img of post.imageurl; let i = index" class="dot"
+                                [class.active]="i === post.currentIndex" (click)="goToSlide(post, i)">
+                            </span>
+                        </div>
+                        <div class="count">
+
+                            <p>{{post.currentIndex+1}}/{{post.imageurl.length}} </p>
+                        </div>
+                    </div>
+
+                    <!-- Single Image -->
+                    <div *ngIf="post.imageurl && post.imageurl.length <= 1">
+                        <img [src]="post.imageurl[0]" alt="Post Image" class="post-image" />
+                    </div>
+
+                    <p>{{ post.content }}</p>
+                </div>
+
+                <!-- Actions: Like, Comment, Share -->
+                <div class="actions">
+                    <hr>
+                    <a *ngIf="!isLiked(post.id)" (click)="updateCount(post.id, true)">
+                        <img class="profilepic" src="assets/like.png">
+                        <span>{{ likedataa[post.id]?.clickCount }}</span>
+                    </a>
+
+                    <a *ngIf="isLiked(post.id)" (click)="updateCount(post.id, false)">
+                        <img class="profilepic" src="assets/heart.png">
+                        <span>{{ likedataa[post.id]?.clickCount }}</span>
+                    </a>
+
+                    <a (click)="comntsec(post.id)">
+                        <img class="profilepic" src="assets/chat.png">
+                        <span>{{ getCommentCount(post.id) }}</span>
+                    </a>
+
+                    <a (click)="sharePost(post.id)">
+                        <img class="profilepic" src="assets/send.png">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <ng-template #noposts>
+        No Posts to display
+    </ng-template>
+
+
+    <div class="modal-overlay" *ngIf="isModalOpen ">
+        <div class="modal-content">
+            <div class="row cmnthed bdr-btm">
+
+                <div class="col-sm-8 cmt">Comments</div>
+                <div class="close-button col-sm-3 text-right " (click)="closeModal()">Close <span> X</span> </div>
+            </div>
+
+
+            <div *ngIf="hasComments; else noComments">
+                <div *ngFor="let comment of filteredComments">
+                    <div class="comments-container">
+                        <div class="row">
+                            <div class="col-sm-11 row">
+                                <div class="col-sm-2">
+                                    <img style="height: 50px; width: 50px;" [src]="comment.profilePicture">
+                                </div>
+                                <span class="col-sm-9">{{ comment.Username }}</span>
+                                <p class="col-sm-9">
+                                    {{ comment.comment }}
+                                </p>
+                            </div>
+
+                            <div *ngIf="comment.userId === localId" class="col-sm-1">
+                                <span><img class="deletebtn" src="assets/delete.png"
+                                        (click)="deleteComment(comment.id)" /></span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <p class="bdr-btm"></p>
+                </div>
+            </div>
+
+            <!-- "No Comments" message -->
+            <ng-template #noComments>
+                <span>No Comments For this post</span>
+            </ng-template>
+
+            <div class="row comntseccss">
+                <div class="col-sm-10">
+                    <input type="text" placeholder="Comment Here" [(ngModel)]="cmnttxt" class="form-control cmntinpt" />
+                </div>
+                <div class="col-sm-2">
+                    <a (click)="postcomment()"><img style="height: 35px; width: 35px;" src="assets\message.png"
+                            alt="Send comment"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" *ngIf="issharepost">
+        <div class="modal-content">
+            <div class="row cmnthed bdr-btm">
+                <div class="col-sm-8 cmt">Share List</div>
+                <div class="close-button col-sm-3 text-right" (click)="clsshrpstmdl()">
+                    Close <span> X</span>
+                </div>
+                
+            </div>
+    
+        <div *ngIf="userdetails.length > 0; else noUsers">
+            <div class="row background" *ngFor="let user of userdetails">
+                <div class="col-sm-2 margin">
+                    <img [src]="user.profilePicture" style="height: 50px; width: 50px;" />
+                </div>
+                <div class="col-sm-9 margin">
+                    <p>{{ user.Username }}</p>
+                    <input type="checkbox" class="checkbox" (change)="toggleUserSelection(user)" />
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn btn-secondary" (click)="sharePostToBackend()">Send</button>
+         
+            <ng-template #noUsers>
+                <p>No users available to share.</p>
+            </ng-template>
+        </div>
+    </div>
+
+
+    <ng-template #nousers>No Users Available</ng-template>
+</div>

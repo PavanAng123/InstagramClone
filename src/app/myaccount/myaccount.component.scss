@@ -1,0 +1,349 @@
+.prev {
+    left: -36px;
+    padding: 10px !important;
+}
+
+.next {
+    right: -36px;
+    padding: 10px !important;
+}
+
+// .carousel {
+//     position: static;
+// }
+
+.dots-container {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.dot {
+    height: 10px;
+    width: 10px;
+    margin: 0 5px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.dot.active {
+    background-color: #717171;
+}
+
+button {
+    position: absolute;
+    top: 39%;
+    transform: translateY(-60%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+// .post-card {
+//     width: 24%;
+//     background-color: rgb(248, 242, 242);
+//     margin: 5px;
+//     min-height: 430px;
+// }
+
+.content{
+    justify-items: center;
+    padding-top: 10px;
+}
+.post-image{
+    padding-top: 5px;
+    border-radius: 50%;
+}
+.editdot {
+    height: 30px;
+    width: 30px;
+   
+}
+.editpst{
+    cursor: pointer;
+}
+
+.profpic{
+    height: 50px;
+    width: 50px;
+    padding-top: 0px;
+    border-radius: 50%;
+}
+.dot {
+    height: 10px;
+    width: 10px;
+    margin: 0 5px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.dot.active {
+    background-color: #717171;
+}
+.editdot.active {
+    background-color: #717171;
+}
+.likeimage {
+    margin-right: 10px;
+    color: black;
+    text-decoration: none !important;
+    cursor: pointer;
+
+}
+.profilepic {
+    padding-top: 5px;
+    height: 35px;
+    width: 35px;
+}
+.images{
+    bottom: 10px;
+    position: relative;
+    left: 15px;
+    width: 100%;
+}
+// .textcenter{
+//     text-align: center!important;
+// }
+
+/* Modal Background */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+
+}
+
+/* Modal Box */
+.modal-content {
+    background: white;
+    padding-left: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-height: 400px;
+    overflow-x: hidden;
+    //text-align: center;
+    position: relative;
+}
+
+
+
+.close-button {
+    position: sticky;
+    top: 0px;
+    margin-right: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    padding-right: 0px;
+}
+
+
+.comntseccss {
+    position: sticky;
+    bottom: -1px;
+    border-radius: 20px;
+    background-color: rgb(233, 233, 224);
+    padding: 10px;
+    margin-right: 3px;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.modal-overlay button {
+    right: 0px
+}
+
+.comments-container {
+    flex-grow: 1;
+    //overflow-y: auto; /* Allow scrolling of comments */
+    padding-top: 10px;
+
+}
+
+
+.cmnthed {
+    top: 0px;
+    position: sticky;
+    background-color: white;
+    margin-bottom: 0px;
+    height: 40px;
+    z-index: 100;
+    padding-top: 20px;
+    padding-bottom: 30px;
+}
+
+.cmt {
+    font-weight: bold;
+}
+.likepropics{
+    height: 25px;
+    width: 25px;
+    padding: 0px;
+}
+.propics{
+    padding-right: 0px;
+    padding-left:0px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+.propad{
+    padding-left:8px
+}
+
+hr {
+    
+    border: 0;
+    border-top: 1px solid black !important;
+    margin-top: 18px;
+    margin-bottom: 5px;
+}
+.bdr{
+    border: 0;
+        border-top: 1px solid black !important;
+        margin-top: 8px;
+}
+.justify{
+margin-bottom: 10px;
+}
+.deletebtn {
+    height: 25px;
+    width: 20px;
+    cursor: pointer;
+}
+
+// --------------------------------------------------------------
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+    grid-auto-flow: dense;
+    /* Ensures efficient placement */
+}
+
+.post-card {
+    background-color: rgb(248, 242, 242);
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    min-height: 400px;
+    /* Ensuring consistent height */
+    display: flex;
+    flex-direction: column;
+}
+.post-card p{
+    text-align: center;
+}
+
+.carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .count {
+            text-align: -webkit-center;
+        }
+    
+        p {
+            background: #6a6767;
+            justify-items: center;
+            width: 40px;
+            border-radius: 20px;
+            color: #e5dcdc;
+    
+    
+        }
+}
+
+
+.carousel-images {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    /* Adjust as needed */
+    height: auto;
+    position: relative;
+}
+
+.carousel-images img {
+    max-width: 100%;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    left: 0;
+    top: 0;
+}
+
+.carousel-images img.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.carousel-images img.prev {
+    transform: translateX(-100%);
+}
+
+.carousel-images img.next {
+    transform: translateX(100%);
+}
+.textcenter {
+    text-align: center;
+}
+
+.propics img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 3px solid rgb(248, 242, 242);
+}
+.singleimg img{
+    border-radius: 8px; 
+}
+.comments-container span{
+    font-weight: bold;
+}
+.likestyle{
+    margin-bottom: 13px;
+    padding: 0px;
+    height: 30px;
+    width: 30px;
+}
+.bdr-btm{
+border-bottom: 1px solid black;
+}
+.margin {
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+}
+.background {
+    background: #dbdbdb;
+    margin-bottom: 4px;
+    margin-right: 4px;
+    border-radius: 20px;
+}
+.btn-secondary {
+    bottom: 0 !important;
+    position: sticky;
+    width: 105%;
+    transform: translateY(-4%);
+    background: black;
+    background: black;
+        margin-left: -19px;
+}
+.checkbox{
+    right: 0 !important;
+    position: absolute;
+        top: 45% !important;
+}

@@ -1,0 +1,140 @@
+.form-control{
+    margin-bottom: 10px;
+}
+.search-box {
+    margin-top: 10px;
+    position: relative;
+    display: inline-block;
+}
+
+.search-box input {
+    padding-left: 30px;
+    width: 400px;
+    height: 35px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 10px;
+    top: 40%;
+    transform: translateY(-50%);
+    color: rgb(139, 139, 139);
+}
+
+.profile-img {
+    width: 60px;
+    height: 60px;
+}
+
+img {
+    border-radius: 8px;
+}
+.imgcls {
+    height: 50px;
+    width: 50px;
+    margin-top: 10px;
+    border-radius: 50%;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .posts-container {
+        grid-template-columns: repeat(auto-fit, minmax(48%, 1fr)); // 2 columns on tablets
+    }
+}
+
+@media (max-width: 768px) {
+    .posts-container {
+        grid-template-columns: repeat(auto-fit, minmax(100%, 1fr)); // 1 column on mobile
+    }
+}
+
+.posts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(24%, 24%));
+    /* Each post is exactly 24% */
+    /* Aligns items to the start to prevent stretching */
+    gap: 15px;
+}
+
+.posts {
+    background-color: rgb(248, 242, 242);
+    min-height: 400px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.profilepic {
+    padding-top: 5px;
+    height: 35px;
+    width: 35px;
+
+}
+
+.content {
+    justify-items: center;
+
+    .profile {
+        justify-items: center;
+    }
+}
+
+.carousel {
+    position: relative;
+    text-align: center;
+
+    .carousel-images {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.dots-container {
+    text-align: center;
+    margin-top: 10px;
+
+}
+
+.dot {
+    height: 10px;
+    width: 10px;
+    margin: 0 5px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.dot.active {
+    background-color: #717171;
+}
+
+button {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 16px;
+}
+
+.prev {
+    left: -36px;
+    padding: 10px !important;
+}
+
+.next {
+    right: -36px;
+    padding: 10px !important;
+}

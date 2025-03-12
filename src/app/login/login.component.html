@@ -1,0 +1,27 @@
+<div class="login-container">
+    <form #AuthForm="ngForm" (ngSubmit)="onSubmit(AuthForm)">
+                <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+
+        <h2 class="text-center">LOGIN</h2>
+        <div class="form-group">
+           <label>Email: </label>
+       
+            <input type="email" class="form-control" name="email" ngModel required id="email"  placeholder="Enter Email">
+        </div> 
+            
+        <div class="form-group">
+            <label>Password </label>
+                <input type="password" class="form-control" name="password" id="Password" ngModel required minlength="8" placeholder="Please Enter Password" >
+            </div>
+            <button type="submit" [disabled]="!AuthForm.valid" class="btn btn-primary">Login</button>|
+            <button type="button" (click)="Tosignup()" class="btn btn-primary">signup</button>
+    </form>
+</div>
+<!-- 
+<dl>
+    <dt>What is Angular?</dt>
+    <dd>Angular is a platform and framework for building single-page client applications using HTML and TypeScript.</dd>
+
+    <dt>What is lazy loading?</dt>
+    <dd>Lazy loading is a technique in Angular to load modules or components only when they are needed.</dd>
+</dl> -->

@@ -1,0 +1,30 @@
+<div class="signup-container">
+    <form #signupForm="ngForm" (ngSubmit)="onSubmit(signupForm)">
+        <div *ngIf="errormsg" class="alert alert-danger" >{{errormsg}}</div>
+        
+        <h2 class="text-center">SIGN UP</h2>
+        <div class="form-group ">
+           
+            <div >
+                <label>Email </label>
+            
+                <input type="text" class="form-control" name="Email" ngModel  id="Email" placeholder="Enter Email">
+            </div>
+            <div>
+                <label>Password </label>
+                <input type="password" class="form-control" name="password" id="Password" ngModel required minlength="8"
+                    placeholder="Please Enter Password">
+            </div>
+           
+            
+        </div>
+
+       
+        <div class="button">
+        <button clas="text-right" type="submit" [disabled]="!signupForm.valid"  class="btn btn-primary">Submit</button> |
+                <button clas="text-right" type="button"  class="btn btn-primary" (click)="navigatelogin()">Back to login</button>
+
+        </div>
+    </form>
+</div>
+

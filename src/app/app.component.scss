@@ -1,0 +1,44 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    /* Ensure the body takes full height */
+}
+
+app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    /* Ensure it's above other elements */
+    background-color: #fff;
+    /* Optional: Add background to avoid transparency */
+    // box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Optional: Add shadow for better visibility */
+}
+
+app-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    /* Ensure it's above other elements */
+        margin-top: 10px;
+        height: fit-content;
+        justify-content: center;
+    /* Optional: Add background */
+    /* Optional: Add shadow */
+}
+
+.container {
+    margin-top: 70px;
+    /* Adjust based on the header height */
+    margin-bottom: 50px;
+    /* Adjust based on the footer height */
+}
+.height{
+    min-height:max-content;
+}

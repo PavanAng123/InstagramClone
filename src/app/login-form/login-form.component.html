@@ -1,0 +1,48 @@
+<div class="signup-container">
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+        <h2 class="text-center">SIGN UP</h2>
+        <div class="form-group row">
+            <div class="col-sm-4">
+                <label>First Name </label>
+                <input type="text" class="form-control" name="firstname" ngModel required id="firstname"
+                    placeholder="Enter firstname">
+            </div>
+            <div class="col-sm-4">
+                <label>Last Name </label>
+                <input type="text" class="form-control" name="lastname" ngModel required id="lastname"
+                    placeholder="Enter lastname">
+            </div>
+            <div class="col-sm-4">
+            <label>Profile Picture</label>
+            <input type="text" class="form-control" name="profilePicture" id="profilePicture" ngModel #imgurl="ngModel">
+        </div>
+        <div class="">
+            <img [src]="imgurl.value" alt="image">
+        </div>
+
+        
+        </div>
+
+        <div class="form-group row">
+            <div class="col-sm-4">
+                <label>Username</label>
+
+                <input type="text" class="form-control" name="Username" ngModel required id="Username"
+                    placeholder="Enter Username">
+            </div>
+            <div class="col-sm-4">
+                <label>Bio </label>
+
+                <input type="text" class="form-control" name="bio" ngModel required id="bio" placeholder="Enter bio">
+            </div>
+
+        </div>
+        
+
+        <div>
+            <button clas="text-right" type="submit" [disabled]="!loginForm.valid"
+                class="btn btn-primary">Submit</button>
+
+        </div>
+    </form>
+</div>

@@ -1,0 +1,126 @@
+<div class="chat-container ">
+<div class="search-box">
+<input type="text" [(ngModel)]="searchQuery" (input)="filterUsers()" placeholder="Search users..."
+    class="form-control" />    <i class="fa fa-search"></i>
+</div>
+
+
+
+<div style="margin-top: 10px;" *ngFor="let user of filteredUsers">
+<div *ngIf="searchQuery !== '' " (click)="startChat(user)">
+    <div class="row">
+        <div class="col-sm-1">
+            <img [src]="user.profilePicture" alt="Profile Picture" class="profile-img" />
+        </div>
+        <div class="col-sm-11">
+            <h3>{{ user.Username }}</h3>
+        </div>
+    </div>
+    <hr />
+   
+</div>
+</div>
+
+    <h2 class="col-sm-12" >Messages History</h2>
+
+    <!-- Chat Pairs List -->
+<div class="chat-list col-sm-12">
+<div *ngIf="chatPairs.length >= 1; else noUsers">
+    <div *ngFor="let pair of chatPairs" (click)="loadChatHistory(pair)">
+        <div class="row" *ngIf="getUserDetailsFromPair(pair) as user">
+            <div class="col-sm-1">
+                <img [src]="user.profilePicture" alt="Profile Picture" class="profile-img" />
+            </div>
+            <div class="col-sm-11" style="padding-left: 0px;">
+                <h4 style="margin-top: 0px;">{{ user.Username }}</h4>
+                <p *ngIf="lastMsgsender[pair] === localId">You: {{ lastMessages[pair] }}</p>
+                <p *ngIf="lastMsgsender[pair] !== localId">Sent: {{ lastMessages[pair] }}</p>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div>
+
+<ng-template #noUsers>
+    <p>No Chatting History found.</p>
+</ng-template>
+
+
+    <!-- Chat History -->
+    <div class="modal-overlay" *ngIf="isModalOpen ">
+        <div class="modal-content">
+            <div class="row cmnthed">
+            
+                <div class="col-sm-8 cmt" *ngIf="selectedUser">Chat with {{ selectedUser.Username }}</div>
+                <div class="close-button col-sm-3 text-right " (click)="closeModal()">Close <span> X</span> </div>
+                <hr>
+            </div>
+
+            <div class="chat-history col-sm-12" *ngIf="selectedPair">
+                <ul>
+                    <li *ngFor="let item of filteredPosts "
+                        [ngClass]="{'sent': item.senderId === localId, 'received': item.senderId !== localId}">
+                        <span style="position: absolute; right: 45%;  margin-top: -40px;">{{item.timestamp| date:'ccc hh:mm a'}} </span>
+
+                    <div *ngIf="selectedUser && item.senderId !== localId">
+                        <img [src]="selectedUser.profilePicture" alt="Profile Picture" class="selected-profile-img" />
+                    </div>
+
+                        <!-- Display Post -->
+                        <ng-container *ngIf="item.type === 'post'">
+                            <h4>{{ item.Username }}</h4>
+                            <p>{{ item.title }}</p>
+
+                            <!-- <div *ngIf="item.imageurl" class="post-image">
+                                <img *ngFor="let images of item.imageurl" [src]="images" alt="Post Image" />
+                            </div> -->
+
+                                <div *ngIf="item.imageurl && item.imageurl.length > 1" class="carousel">
+                                
+                                    <div class="carousel-images">
+                                        <img [src]="item.imageurl[item.currentIndex]" alt="Post Image" class="post-image" />
+                                    </div>
+                                    <button class="prev" (click)="prevSlide(item)">&#10094;</button>
+                                    <button class="next" (click)="nextSlide(item)">&#10095;</button>
+                                
+                                    <!-- Indicator Dots -->
+                                    <div class="dots-container">
+                                        <span *ngFor="let img of item.imageurl; let i = index" class="dot" [class.active]="i === item.currentIndex"
+                                            (click)="goToSlide(item, i)">
+                                        </span>
+                                    </div>
+                                    <div class="count">
+                                
+                                        <p>{{item.currentIndex+1}}/{{item.imageurl.length}} </p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Single Image -->
+                                <div *ngIf="item.imageurl && item.imageurl.length <= 1">
+                                    <img [src]="item.imageurl[0]" alt="Post Image" class="post-image" />
+                                </div>
+
+                            <p>{{ item.content }}</p>
+                        </ng-container>
+
+                        <!-- Display Chat -->
+                        <ng-container *ngIf="item.type === 'chat'">
+                            <p>{{ item.chattext }}</p>
+                        </ng-container>
+                    </li>
+                </ul>
+            </div>
+
+
+            <div class="row comntseccss">
+                <div class="col-sm-10">
+                    <input type="text" placeholder="Message Here" [(ngModel)]="chattxt" class="form-control " />
+                </div>
+                <div class="col-sm-2">
+                    <a (click)="satting(selectedPair)" ><img style="height: 35px; width: 35px;" src="assets\message.png"
+                            alt="Send comment"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

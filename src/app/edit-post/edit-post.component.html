@@ -1,0 +1,38 @@
+<div class="row" *ngFor="let Editpost of userPosts">
+    <div *ngIf="Editpost.id == postId">
+        <div class="col-sm-7">
+            <label>Title</label>
+            <input type="text" [(ngModel)]="Editpost.title" class="form-control"
+                placeholder="Please enter post title" />
+        </div>
+        <div class="col-sm-7">
+            <label>Content</label>
+            <input type="text" [(ngModel)]="Editpost.content" class="form-control"
+                placeholder="Please enter content for your post" />
+        </div>
+
+        <!-- Image Section -->
+        <div *ngIf="Editpost.imageurl && Editpost.imageurl.length >= 1">
+            <div class="imagestyl" *ngFor="let img of Editpost.imageurl; let i = index">
+                <label class="col-sm-7">Image URLs</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" [(ngModel)]="Editpost.imageurl[i]" />
+                </div>
+                <div class="col-sm-3">
+                    <img [src]="img || 'https://via.placeholder.com/140x140'" alt="Post image" />
+                </div>
+                <hr class="col-sm-10">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Corrected Delete Button -->
+<div class="col-sm-12">
+    <button class="btn btn-success" (click)="mdfyuserpost()">Save Post</button>
+    |
+    <button (click)="deletePost()" class="btn btn-danger">Delete Post</button>
+    |
+    <button class="btn btn-primary" (click)="navgtomyacc()">Cancel Editing</button>
+</div>
+

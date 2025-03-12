@@ -1,0 +1,19 @@
+<nav class="navbar navbar-default">
+        <div class="container-fluid">
+                <div class="navbar-header">
+                        <a class="navbar-brand" [routerLink]="['/posts']" routerLinkActive="router-link-active">Instagram Clone</a>
+
+                </div>
+                
+                <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav">
+                                <li><a [routerLink]="['/dashboard']">Search</a></li>
+                                <li><a class="btn " [routerLink]="['/myaccount']">My Account</a></li>
+                                <li><a class="btn " [routerLink]="['/posts']">Posts</a></li>
+                                <li><a class="btn " [routerLink]="['/createposts']">Create Posts</a></li>
+                                <li><a class="btn " [routerLink]="['/chats']">Chats</a></li>
+                                <li><a class="btn" (click)="logout()">Logout</a></li>
+                        </ul>
+                </div>
+        </div>
+</nav>
