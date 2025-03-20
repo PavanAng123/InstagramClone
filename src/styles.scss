@@ -77,8 +77,8 @@ button {
     scrollbar-width: none;
 }
 
-body {
-font-family: cursive !important;    /* Change 'Roboto' to your preferred font */
+* {
+    font-family: "Comic Sans MS", "Comic Sans", cursive !important;
 }
 
 input {
