@@ -164,6 +164,8 @@ export class MyaccountComponent implements OnInit {
   openlikeusers(post: any) {
     this.likeusers = true;
     this.selectedPost = post;
+    document.body.style.overflow = 'hidden';
+
   }
 
   // sharePosttobackend(user: any) {
