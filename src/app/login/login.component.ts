@@ -22,21 +22,40 @@ export class LoginComponentComponent {
     const email = form.value.email;
     const password = form.value.password;
 
-    this.authService.loginservice(email, password).subscribe(
-      (res) => {
-        console.log(res);
-        console.log(res.localId);
-        const localId = res.localId;
-        localStorage.setItem('localId', localId);
-        this.prouser();
-        this.router.navigate(['/myaccount']);
-      },
-      (errormessage) => {
-        console.log(errormessage);
-        this.error = errormessage;
-      }
+    // this.authService.loginservice(email, password).subscribe(
+    //   (res) => {
+    //     console.log(res);
+    //     console.log(res.localId);
+    //     const localId = res.localId;
+    //     localStorage.setItem('localId', localId);
+    //     this.prouser();
+    //     this.router.navigate(['/myaccount']);
+    //   },
+    //   (errormessage) => {
+    //     console.log(errormessage);
+    //     this.error = errormessage;
+    //   }
   
-    );
+    // );
+
+    this.authService.loginservice(email, password).subscribe({
+      next: (res) => {
+        // Save required info (already done in service)
+           const localId = res.localId;
+           localStorage.setItem('localId', localId);
+           this.prouser();
+           this.router.navigate(['/myaccount']);
+        console.log('Login successful');
+
+        // ✅ Call authentication to trigger login state immediately
+        this.authService.authentication();
+
+      },
+      error: (err) => {
+        console.error('Login error:', err);
+      },
+    });
+
     
   }
 

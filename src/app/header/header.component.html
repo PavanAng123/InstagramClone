@@ -1,18 +1,31 @@
 <nav class="navbar navbar-default">
         <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
-                        <a class="navbar-brand" [routerLink]="['/posts']" routerLinkActive="router-link-active">Instagram Clone</a>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                                data-target="#main-navbar" aria-expanded="false">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                        </button>
 
+                        <a class="navbar-brand" [routerLink]="['/posts']"
+                                routerLinkActive="router-link-active">Instagram Clone</a>
                 </div>
-                
-                <div class="collapse navbar-collapse">
+
+                <!-- Navbar links, hidden on collapse -->
+                <div class="collapse navbar-collapse" id="main-navbar">
                         <ul class="nav navbar-nav">
-                                <li><a [routerLink]="['/dashboard']">Search</a></li>
-                                <li><a class="btn " [routerLink]="['/myaccount']">My Account</a></li>
-                                <li><a class="btn " [routerLink]="['/posts']">Posts</a></li>
-                                <li><a class="btn " [routerLink]="['/createposts']">Create Posts</a></li>
-                                <li><a class="btn " [routerLink]="['/chats']">Chats</a></li>
-                                <li><a class="btn" (click)="logout()">Logout</a></li>
+                                <li *ngIf="isLoggedIn"><a [routerLink]="['/dashboard']">Search</a></li>
+                                <li *ngIf="isLoggedIn"><a class="btn" [routerLink]="['/myaccount']">My Account</a></li>
+                                <li *ngIf="isLoggedIn"><a class="btn" [routerLink]="['/posts']">Posts</a></li>
+                                <li *ngIf="isLoggedIn"><a class="btn" [routerLink]="['/createposts']">Create Posts</a>
+                                </li>
+                                <li *ngIf="isLoggedIn"><a class="btn" [routerLink]="['/chats']">Chats</a></li>
+                                <li *ngIf="isLoggedIn"><a class="btn" [routerLink]="['/edit-profile']">EditProfile</a>
+                                </li>
+                                <li *ngIf="isLoggedIn"><a class="btn" (click)="logout()">Logout</a></li>
                         </ul>
                 </div>
         </div>

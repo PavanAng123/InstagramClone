@@ -3,6 +3,9 @@
         <div *ngIf="errormsg" class="alert alert-danger" >{{errormsg}}</div>
         
         <h2 class="text-center">SIGN UP</h2>
+        <div class="border-box">
+
+        
         <div class="form-group ">
            
             <div >
@@ -24,6 +27,7 @@
         <button clas="text-right" type="submit" [disabled]="!signupForm.valid"  class="btn btn-primary">Submit</button> |
                 <button clas="text-right" type="button"  class="btn btn-primary" (click)="navigatelogin()">Back to login</button>
 
+        </div>
         </div>
     </form>
 </div>

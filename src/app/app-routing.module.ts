@@ -25,14 +25,19 @@ const routes: Routes = [
     canActivate: [Authgaurd],
   },
   {
+    path: 'edit-profile',
+    component: LoginFormComponent,
+    canActivate: [Authgaurd],
+  },
+  {
     path: 'createposts',
     component: CreatepostsComponent,
     canActivate: [Authgaurd],
   },
   { path: 'posts', component: DisplaypostsComponent, canActivate: [Authgaurd] },
-  {path:'editpost', component:EditPostComponent, canActivate:[Authgaurd]},
+  { path: 'editpost', component: EditPostComponent, canActivate: [Authgaurd] },
   { path: 'loginForm', component: LoginFormComponent },
-  {path: 'chats', component:ChatsComponent,  canActivate:[Authgaurd]},
+  { path: 'chats', component: ChatsComponent, canActivate: [Authgaurd] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];
 

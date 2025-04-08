@@ -1,24 +1,52 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { catchError, forkJoin, map, Observable, of, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  map,
+  Observable,
+  of,
+  throwError,
+} from 'rxjs';
 import { comntdata, Posts } from './displayposts/displayposts.model';
 import { userdetails } from './myaccount/myaccount.model';
+
 export interface authresponse {
   idToken: string;
   email: string;
   refreshToken: string;
   expiresIn: string;
-  localId:string;
+  localId: string;
 }
+
+// export interface Message extends firebase.firestore.DocumentData {
+//   sender: string;
+//   text: string;
+//   timestamp: any;
+// }
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   profilePicture: any;
   Username: any;
-  constructor(private httpclient: HttpClient, private router: Router) {}
 
+  // BehaviorSubject to store the authentication state
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+
+  // Expose the observable (so other components can subscribe)
+  isLoggedIn$: Observable<boolean> = this.isLoggedInSubject.asObservable();
+  constructor(private httpclient: HttpClient, private router: Router) {}
+  // Method to log in (You can replace this with real authentication logic)
+  login() {
+    this.isLoggedInSubject.next(true); // Set login state to true
+  }
+
+  // Method to log out
+  logout() {
+    this.isLoggedInSubject.next(false); // Set login state to false
+  }
   public loginservice(email: any, password: any) {
     const api =
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBeL2hSsZFJuWKJR39p2GuijjkNrvPZ2m4';
@@ -65,6 +93,12 @@ export class AuthService {
         userid: localId,
         profilePicture: profilePicture,
       }
+    );
+  }
+  updateUserInFirebase(firebaseId: string, updatedData: any) {
+    return this.httpclient.patch(
+      `https://application-clone-7f061-default-rtdb.firebaseio.com/aftersignup/${firebaseId}.json`,
+      updatedData
     );
   }
 
@@ -147,30 +181,29 @@ export class AuthService {
               id: key,
               ...value,
             }))
-            .filter((post: any) => post.userid === localId );
+            .filter((post: any) => post.userid === localId);
         })
       );
   }
 
   getSearchUserPosts(userId: string): Observable<any> {
-  return this.httpclient
-    .get(
-      `https://application-clone-7f061-default-rtdb.firebaseio.com/createposts.json`
-    )
-    .pipe(
-      map((data: any) => {
-        // Filter posts to show only those created by the logged-in user
-        console.log(data);
-        return Object.entries(data)
-          .map(([key, value]: any) => ({
-            id: key,
-            ...value,
-          }))
-          .filter((post: any) => post.userid === userId);
-      })
-    );
-}
-
+    return this.httpclient
+      .get(
+        `https://application-clone-7f061-default-rtdb.firebaseio.com/createposts.json`
+      )
+      .pipe(
+        map((data: any) => {
+          // Filter posts to show only those created by the logged-in user
+          console.log(data);
+          return Object.entries(data)
+            .map(([key, value]: any) => ({
+              id: key,
+              ...value,
+            }))
+            .filter((post: any) => post.userid === userId);
+        })
+      );
+  }
 
   getuserdata(): Observable<userdetails[]> {
     const localId = localStorage.getItem('localId');
@@ -346,30 +379,44 @@ export class AuthService {
   authentication() {
     const user = localStorage.getItem('localId');
     if (user) {
-      return;
+      this.login();
+      return true;
     } else {
-      // return false
+      this.isLoggedInSubject.next(false); // In case of logout or missing ID
       this.router.navigate(['/login']);
+      return false;
     }
   }
 
   private handlerror(errorRes: HttpErrorResponse) {
-    let errorMessage = 'an error occured';
+    let errorMessage = 'An unknown error occurred. Please try again.';
+
     if (!errorRes.error || !errorRes.error.error) {
-      return throwError(errorMessage);
+      return throwError(() => new Error(errorMessage));
     }
+
+    const serverMessage = errorRes.error.error.message;
 
     switch (errorRes.error.error.message) {
       case 'EMAIL_EXISTS':
-        errorMessage = 'This Email Already Exists';
+        errorMessage = 'This email already exists. Try logging in instead.';
         break;
-      case 'INVALID_LOGIN_CREDENTIALS':
-        errorMessage = 'Email is not found';
+      case 'EMAIL_NOT_FOUND':
+        errorMessage = 'No account found with this email.';
         break;
-      case 'INVALID_LOGIN_CREDENTIALS':
-        errorMessage = 'This Password is Invalid';
+      case 'INVALID_PASSWORD':
+        errorMessage = 'The password you entered is incorrect.';
+        break;
+      case 'USER_DISABLED':
+        errorMessage =
+          'This user account has been disabled by the administrator.';
+        break;
+
+      default:
+        errorMessage = serverMessage || errorMessage;
         break;
     }
-    return throwError(errorMessage);
+
+    return throwError(() => new Error(errorMessage));
   }
 }

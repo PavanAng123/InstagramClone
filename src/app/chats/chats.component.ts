@@ -2,13 +2,15 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Posts } from '../displayposts/displayposts.model';
 import { userdetails } from '../myaccount/myaccount.model';
+import { PipeTransform } from '@angular/core';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-chats',
   templateUrl: './chats.component.html',
   styleUrls: ['./chats.component.scss'],
 })
-export class ChatsComponent implements OnInit {
+export class ChatsComponent implements OnInit, PipeTransform {
   chatPairs: string[] = [];
   chatHistory: any[] = [];
   selectedPair!: string;
@@ -26,20 +28,34 @@ export class ChatsComponent implements OnInit {
   chatHistories: { [pair: string]: any[] } = {}; // Store chat history for each pair
   lastMessages: { [key: string]: string } = {}; // Initialize to prevent undefined errors
   lastMsgsender: { [key: string]: string } = {};
+  lastMsgreciver: { [key: string]: string } = {};
+
   searchQuery: string = '';
   filteredUsers: userdetails[] = []; // List of filtered users
   currentIndex: number = 0;
+  messages: any[] = [];
+  pollingInterval: any;
 
   constructor(
     private authservice: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
+  transform(value: any, ...args: any[]) {
+    throw new Error('Method not implemented.');
+  }
 
   ngOnInit() {
     this.localId = localStorage.getItem('localId');
     this.fetchUsers();
     this.loadChatPairs();
     this.fetchPosts();
+
+    // Poll every 3 seconds
+    this.pollingInterval = setInterval(() => {
+      if (this.selectedPair) {
+        this.loadChatHistory(this.selectedPair, true); // pass true to avoid UI change like scroll, modal etc.
+      }
+    }, 3000);
   }
 
   loadChatPairs() {
@@ -104,6 +120,12 @@ export class ChatsComponent implements OnInit {
   closeModal() {
     this.isModalOpen = false;
     document.body.style.overflow = '';
+
+    // Stop the polling interval
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+      this.pollingInterval = null;
+    }
   }
   //  Fetches posts from the server
   fetchPosts() {
@@ -247,6 +269,7 @@ export class ChatsComponent implements OnInit {
         next: (lastMessage) => {
           this.lastMessages[pair] = lastMessage?.chattext || 'Shared a Post';
           this.lastMsgsender[pair] = lastMessage?.senderId;
+          this.lastMsgreciver[pair] = lastMessage?.receiverId;
         },
         error: (err) =>
           console.error(`Error fetching last message for ${pair}:`, err),
@@ -302,5 +325,29 @@ export class ChatsComponent implements OnInit {
   // Jump to a specific slide using dots (specific to each post)
   goToSlide(post: any, index: number): void {
     post.currentIndex = index;
+  }
+
+  ngAfterViewChecked() {
+    const chatContainer = document.querySelector('.chat-history');
+    if (chatContainer) {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+  }
+
+  getSmartDate(timestamp: string): string {
+    const now = moment();
+    const date = moment(timestamp);
+
+    if (now.isSame(date, 'day')) {
+      return 'Today,' + date.format(' hh:mm A');
+    } else if (moment().subtract(1, 'day').isSame(date, 'day')) {
+      return 'Yesterday at ' + date.format('hh:mm A');
+    } else if (now.isSame(date, 'week')) {
+      return date.format('dddd[,] hh:mm A');
+    } else if (now.isSame(date, 'year')) {
+      return date.format('MMM D[,] hh:mm A');
+    } else {
+      return date.format('MMM D, YYYY[,] hh:mm A');
+    }
   }
 }

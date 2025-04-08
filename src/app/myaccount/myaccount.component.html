@@ -6,6 +6,7 @@
       </div>
       <h3>{{userdetails.Username}} </h3>
       <p>{{userdetails.bio}}</p>
+      <span class="btn btn-success" (click)="editProfile()">Edit Profile</span>
     </div>
 
   </div>
@@ -163,6 +164,7 @@
 
   <ng-template #noPosts>
     <p>No posts available.</p>
+    <a class="btn btn-primary" [routerLink]="['/createposts']" >Do You Wanna Create One</a>
   </ng-template>
 
   <div class="modal-overlay" *ngIf="isModalOpen ">

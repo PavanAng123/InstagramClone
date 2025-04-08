@@ -1,43 +1,90 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AuthService } from '../auth.service';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.scss']
+  styleUrls: ['./login-form.component.scss'],
 })
-export class LoginFormComponent {
+export class LoginFormComponent implements OnInit {
+  userData: any = {
+    firstname: '',
+    lastname: '',
+    Username: '',
+    bio: '',
+    profilePicture: '',
+  };
 
-  constructor (private authservice: AuthService, private router: Router){}
+  firebaseId: string = '';
+  isEditMode = false;
 
-  onSubmit(form: NgForm) { 
-    const firstname = form.value.firstname;
-    const lastname = form.value.lastname;
-    const Username = form.value.Username;
-    const bio = form.value.bio;
-    const profilePicture = form.value.profilePicture;
+  constructor(private authService: AuthService, private router: Router) {}
 
-    localStorage.setItem('Username', Username);
-    localStorage.setItem('profilePicture', profilePicture);
-    
-    this.authservice
-      .aftersignup(firstname, lastname, Username, bio, profilePicture)
-      .subscribe({
-        
+  ngOnInit(): void {
+    const localId = localStorage.getItem('localId');
+
+    if (localId) {
+      this.authService.getuserdata().subscribe({
         next: (res) => {
-          console.log(res);
-          this.router.navigate(['/myaccount']);
+          // Filter user by localId (userid field)
+          const matchedUser = res.find((user: any) => user.userid === localId);
+
+          if (matchedUser) {
+            this.userData = matchedUser;
+            this.firebaseId = matchedUser.id; // Save Firebase key for update
+            this.isEditMode = true;
+          }
         },
         error: (err) => {
-          console.error('Error during signup:', err);
+          console.error('Error fetching user data:', err);
         },
       });
-    
     }
-
   }
 
-  
+  onSubmit(form: NgForm) {
+    const formData = form.value;
 
+    // Store to localStorage
+    localStorage.setItem('Username', formData.Username);
+    localStorage.setItem('profilePicture', formData.profilePicture);
+
+    if (this.isEditMode) {
+      this.authService
+        .updateUserInFirebase(this.firebaseId, {
+          ...formData,
+          userid: localStorage.getItem('localId'),
+        })
+        .subscribe({
+          next: () => {
+            console.log('User updated');
+            this.router.navigate(['/myaccount']);
+          },
+          error: (err) => {
+            console.error('Error updating user:', err);
+          },
+        });
+    } else {
+      this.authService
+        .aftersignup(
+          formData.firstname,
+          formData.lastname,
+          formData.Username,
+          formData.bio,
+          formData.profilePicture
+        )
+        .subscribe({
+          next: () => {
+            console.log('Signup complete');
+            this.router.navigate(['/myaccount']);
+            this.authService.authentication();
+          },
+          error: (err) => {
+            console.error('Signup failed:', err);
+          },
+        });
+    }
+  }
+}

@@ -34,7 +34,9 @@ export class MyaccountComponent implements OnInit {
     this.fetchcmnts();
     this.fetchUsers();
   }
-
+  editProfile() {
+    this.router.navigate(['/edit-profile']);
+  }
   fetchuserposts() {
     this.authservice.getuserposts().subscribe((posts) => {
       this.userPosts = posts.map((post) => ({
@@ -165,25 +167,8 @@ export class MyaccountComponent implements OnInit {
     this.likeusers = true;
     this.selectedPost = post;
     document.body.style.overflow = 'hidden';
-
   }
 
-  // sharePosttobackend(user: any) {
-  //   if (!this.selectedpostid) {
-  //     console.error('No post ID available!');
-  //     return;
-  //   }
-
-  //   const localId = localStorage.getItem('localId');
-  //   this.authservice.savePostShare(this.selectedpostid, user.userid).subscribe({
-  //     next: (res) => {
-  //       console.log('Shared successfully:', res);
-  //     },
-  //     error: (err) => {
-  //       console.error('Error sharing post:', err);
-  //     },
-  //   });
-  // }
 
   toggleUserSelection(user: any) {
     const index = this.selectedUsers.indexOf(user.userid);
@@ -211,7 +196,7 @@ export class MyaccountComponent implements OnInit {
         next: (res) => {
           console.log(`Shared successfully with ${userid}:`, res);
           this.selectedUsers = [];
-    this.issharepost = false;
+          this.issharepost = false;
         },
         error: (err) => {
           console.error(`Error sharing post with ${userid}:`, err);
@@ -220,7 +205,6 @@ export class MyaccountComponent implements OnInit {
     });
 
     // Clear the selection after sharing
-    
   }
   sharePost(postId: string) {
     this.issharepost = true;

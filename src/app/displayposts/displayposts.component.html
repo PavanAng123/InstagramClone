@@ -112,7 +112,7 @@
 
             <div class="row comntseccss">
                 <div class="col-sm-10">
-                    <input type="text" placeholder="Comment Here" [(ngModel)]="cmnttxt" class="form-control cmntinpt" />
+                    <input type="text" placeholder="Comment Here" [(ngModel)]="cmnttxt" class="form-control cmntinpt" (keydown.enter)="postcomment()" />
                 </div>
                 <div class="col-sm-2">
                     <a (click)="postcomment()"><img style="height: 35px; width: 35px;" src="assets\message.png"
