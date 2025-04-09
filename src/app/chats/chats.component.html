@@ -25,7 +25,7 @@
 
     <!-- Chat Pairs List -->
     <div class="chat-list col-sm-12">
-        <div *ngIf="chatPairs.length >= 1; else noUsers">
+        <div *ngIf="chatPairs.length >= 1">
             <div *ngFor="let pair of chatPairs" (click)="loadChatHistory(pair)">
                 <div class="row" *ngIf="getUserDetailsFromPair(pair) as user">
                     <div class="col-sm-1">
@@ -41,9 +41,9 @@
             </div>
         </div>
 
-        <ng-template #noUsers>
+        <div *ngIf="chatPairs.length <= 1">
             <p>No Chatting History found.</p>
-        </ng-template>
+        </div>
 
 
         <!-- Chat History -->

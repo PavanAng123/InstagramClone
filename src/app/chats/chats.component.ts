@@ -4,6 +4,7 @@ import { Posts } from '../displayposts/displayposts.model';
 import { userdetails } from '../myaccount/myaccount.model';
 import { PipeTransform } from '@angular/core';
 import * as moment from 'moment';
+import { LoadingService } from '../loading.service';
 
 @Component({
   selector: 'app-chats',
@@ -29,7 +30,6 @@ export class ChatsComponent implements OnInit, PipeTransform {
   lastMessages: { [key: string]: string } = {}; // Initialize to prevent undefined errors
   lastMsgsender: { [key: string]: string } = {};
   lastMsgreciver: { [key: string]: string } = {};
-
   searchQuery: string = '';
   filteredUsers: userdetails[] = []; // List of filtered users
   currentIndex: number = 0;
@@ -38,7 +38,8 @@ export class ChatsComponent implements OnInit, PipeTransform {
 
   constructor(
     private authservice: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public loadservice: LoadingService
   ) {}
   transform(value: any, ...args: any[]) {
     throw new Error('Method not implemented.');
@@ -50,16 +51,16 @@ export class ChatsComponent implements OnInit, PipeTransform {
     this.loadChatPairs();
     this.fetchPosts();
 
-    // Poll every 3 seconds
     this.pollingInterval = setInterval(() => {
       if (this.selectedPair) {
-        this.loadChatHistory(this.selectedPair, true); // pass true to avoid UI change like scroll, modal etc.
+        this.loadChatHistory(this.selectedPair, true, true); // skipLoader = true
+        this.loadChatPairs(true); // skipLoader = true
       }
     }, 3000);
   }
 
-  loadChatPairs() {
-    this.authservice.getChatPairs().subscribe({
+  loadChatPairs(skipLoader: boolean = false) {
+    this.authservice.getChatPairs(skipLoader).subscribe({
       next: (pairs) => {
         if (pairs && pairs.length > 0) {
           this.chatPairs = pairs.filter((pair) => this.isUserInChatPair(pair)); // Store the chat pairs
@@ -74,7 +75,11 @@ export class ChatsComponent implements OnInit, PipeTransform {
 
   // Loads chat history for a selected user pair
 
-  loadChatHistory(pair: string, isPreloading: boolean = false) {
+  loadChatHistory(
+    pair: string,
+    isPreloading: boolean = false,
+    skipLoader: boolean = false
+  ) {
     const [user1, user2] = pair.split('+');
 
     if (!isPreloading) {
@@ -87,40 +92,42 @@ export class ChatsComponent implements OnInit, PipeTransform {
       this.selectedUser = user;
     }
 
-    this.authservice.getChatHistory(user1, user2).subscribe({
-      next: (history) => {
-        this.chatHistories[pair] = history; // Store chat history for this pair
-        this.chatHistory = history;
+    this.authservice
+      .getChatHistory(user1, user2, skipLoader)
+      .subscribe({
+        next: (history) => {
+          this.chatHistories[pair] = history; // Store chat history for this pair
+          this.chatHistory = history;
 
-        // Store the receiverId from the latest chat message
-        if (history.length > 0) {
-          this.receiverId = history[0].receiverId; // Assuming the first item has the latest receiverId
-        }
+          // Store the receiverId from the latest chat message
+          if (history.length > 0) {
+            this.receiverId = history[0].receiverId; // Assuming the first item has the latest receiverId
+          }
 
-        // Merge matched users from chat sender IDs
-        const newUsers = history
-          .map((chat) => this.getUserBySenderId(chat.senderId))
-          .filter((user): userdetails | undefined => user) as userdetails[];
+          // Merge matched users from chat sender IDs
+          const newUsers = history
+            .map((chat) => this.getUserBySenderId(chat.senderId))
+            .filter((user): userdetails | undefined => user) as userdetails[];
 
-        this.addUniqueUsers(newUsers);
+          this.addUniqueUsers(newUsers);
 
-        // Filter posts based on chatHistory postId
-        this.filterMatchingPosts();
+          // Filter posts based on chatHistory postId
+          this.filterMatchingPosts();
 
-        this.isModalOpen = true;
-        document.body.style.overflow = 'hidden';
+          this.isModalOpen = true;
+          document.body.style.overflow = 'hidden';
 
-        // Ensure UI updates after data change
-        this.cdr.detectChanges();
-      },
-      error: (err) => console.error('Error fetching chat history:', err),
-    });
+          // Ensure UI updates after data change
+          this.cdr.detectChanges();
+        },
+        error: (err) => console.error('Error fetching chat history:', err),
+      });
   }
 
   closeModal() {
     this.isModalOpen = false;
     document.body.style.overflow = '';
-
+    this.loadChatPairs();
     // Stop the polling interval
     if (this.pollingInterval) {
       clearInterval(this.pollingInterval);
@@ -341,7 +348,7 @@ export class ChatsComponent implements OnInit, PipeTransform {
     if (now.isSame(date, 'day')) {
       return 'Today,' + date.format(' hh:mm A');
     } else if (moment().subtract(1, 'day').isSame(date, 'day')) {
-      return 'Yesterday at ' + date.format('hh:mm A');
+      return 'Yesterday, ' + date.format('hh:mm A');
     } else if (now.isSame(date, 'week')) {
       return date.format('dddd[,] hh:mm A');
     } else if (now.isSame(date, 'year')) {

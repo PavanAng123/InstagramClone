@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import {
   BehaviorSubject,
@@ -338,10 +338,14 @@ export class AuthService {
   }
 
   // Fetch chat pairs (unique user combinations)
-  getChatPairs(): Observable<string[]> {
+  getChatPairs(skipLoader: boolean = false): Observable<string[]> {
+    const headers = skipLoader
+      ? new HttpHeaders({ 'X-Skip-Loader': 'true' })
+      : new HttpHeaders(); // instead of undefined
     return this.httpclient
       .get<{ [key: string]: any }>(
-        `https://application-clone-7f061-default-rtdb.firebaseio.com/chats.json`
+        `https://application-clone-7f061-default-rtdb.firebaseio.com/chats.json`,
+        { headers }
       )
       .pipe(
         map((data) => {
@@ -355,14 +359,18 @@ export class AuthService {
   }
 
   // Fetch chat history between two users
-  getChatHistory(user1: string, user2: string): Observable<any[]> {
+  getChatHistory(user1: string, user2: string, skipLoader: boolean = false): Observable<any[]> {
+    const headers = skipLoader
+      ? new HttpHeaders({ 'X-Skip-Loader': 'true' })
+      : new HttpHeaders(); // instead of undefined
     // Ensure ID ordering remains consistent
     const firstId = user1 < user2 ? user1 : user2;
     const secondId = user1 < user2 ? user2 : user1;
 
     return this.httpclient
       .get<{ [key: string]: any }>(
-        `https://application-clone-7f061-default-rtdb.firebaseio.com/chats/${firstId}+${secondId}.json`
+        `https://application-clone-7f061-default-rtdb.firebaseio.com/chats/${firstId}+${secondId}.json`,
+        { headers }
       )
       .pipe(
         map((data) => {

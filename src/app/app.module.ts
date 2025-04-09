@@ -20,6 +20,9 @@ import { InputandoutputComponent } from './inputandoutput/inputandoutput.compone
 import { ButtonoutputComponent } from './buttonoutput/buttonoutput.component';
 import { EditPostComponent } from './edit-post/edit-post.component';
 import { ChatsComponent } from './chats/chats.component';
+import { SpinnerComponent } from './spinner/spinner.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { LoadingInterceptor } from './loading.interceptor';
 
 
 @NgModule({
@@ -39,6 +42,7 @@ import { ChatsComponent } from './chats/chats.component';
     ButtonoutputComponent,
     EditPostComponent,
     ChatsComponent,
+    SpinnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,7 +51,13 @@ import { ChatsComponent } from './chats/chats.component';
     ReactiveFormsModule,
     HttpClientModule,
   ],
-  providers: [AuthService],
+  providers: [AuthService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
