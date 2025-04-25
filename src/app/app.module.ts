@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponentComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from './auth.service';
-import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SignupComponent } from './signup/signup.component';
 import { ResponseComponent } from './response/response.component';
@@ -21,9 +22,11 @@ import { ButtonoutputComponent } from './buttonoutput/buttonoutput.component';
 import { EditPostComponent } from './edit-post/edit-post.component';
 import { ChatsComponent } from './chats/chats.component';
 import { SpinnerComponent } from './spinner/spinner.component';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoadingInterceptor } from './loading.interceptor';
 
+import { authReducer } from './auth.reducer'; // Ensure this path is correct
+import { AuthService } from './auth.service';
+import { userReducer } from './auth.reducer';
 
 @NgModule({
   declarations: [
@@ -50,13 +53,16 @@ import { LoadingInterceptor } from './loading.interceptor';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    StoreModule.forRoot({ auth: authReducer, user: userReducer }), // Register the reducer
+    StoreDevtoolsModule.instrument({ maxAge: 25 }), // Optional: for debugging
   ],
-  providers: [AuthService,
+  providers: [
+    AuthService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoadingInterceptor,
-      multi: true
-    }
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })
