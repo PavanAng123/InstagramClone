@@ -7,6 +7,7 @@ import { userdetails } from '../myaccount/myaccount.model';
 import { Store } from '@ngrx/store';
 import { loginFailure, loginSuccess, updateprofilepic, updateUsername } from '../auth.actions';
 import { selectLocalId } from '../auth.selector';
+import { filter, take } from 'rxjs';
 
 
 @Component({
@@ -35,8 +36,14 @@ export class LoginComponentComponent {
       next: (res) => {
         const localId = res.localId;
         localStorage.setItem('localId', localId);
-        this.store.dispatch(loginSuccess({ localId }));
-        this.router.navigate(['/myaccount']);
+this.store.dispatch(loginSuccess({ localId }));
+
+// Wait for the localId to appear in store before calling prouser
+      this.store
+        .select(selectLocalId).subscribe((id) => {
+          this.prouser();
+          this.router.navigate(['/myaccount']);
+        });
         console.log('Login successful');
         this.authService.authentication();
       },
@@ -49,7 +56,7 @@ export class LoginComponentComponent {
 
   prouser() {
     this.store.select(selectLocalId).subscribe((localId) => {
-      console.log(localId + 'fromstore');
+      console.log(localId + ' from store');
 
       if (!localId) {
         console.error(
@@ -60,20 +67,23 @@ export class LoginComponentComponent {
 
       this.authService.getuserdata().subscribe({
         next: (userdetailsArray) => {
-          // Find the user matching the logged-in localId
           const loggedInUser = userdetailsArray.find(
             (userdetails) => userdetails.userid === localId
           );
-          console.log(userdetailsArray, 'details');
-          if (loggedInUser) {
-            // Save username and profilePicture to localStorage
-            this.store.dispatch(updateUsername({ username: loggedInUser.Username }));
-            this.store.dispatch(updateprofilepic({profilepic: loggedInUser.profilePicture,}) );
 
+          console.log(userdetailsArray, 'details');
+          console.log('Looking for localId:', localId);
+
+          if (loggedInUser) {
+            this.store.dispatch(
+              updateUsername({ username: loggedInUser.Username })
+            );
+            this.store.dispatch(
+              updateprofilepic({ profilepic: loggedInUser.profilePicture })
+            );
             localStorage.setItem('Username', loggedInUser.Username);
             localStorage.setItem('profilePicture', loggedInUser.profilePicture);
-
-            console.log('User details fetched and stored:', loggedInUser);
+            console.log('User found:', loggedInUser);
           } else {
             console.error('No user found with the matching localId.');
             localStorage.removeItem('Username');

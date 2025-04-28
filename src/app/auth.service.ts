@@ -11,6 +11,8 @@ import {
 } from 'rxjs';
 import { comntdata, Posts } from './displayposts/displayposts.model';
 import { userdetails } from './myaccount/myaccount.model';
+import { selectLocalId } from './auth.selector';
+import { Store } from '@ngrx/store';
 
 export interface authresponse {
   idToken: string;
@@ -20,11 +22,6 @@ export interface authresponse {
   localId: string;
 }
 
-// export interface Message extends firebase.firestore.DocumentData {
-//   sender: string;
-//   text: string;
-//   timestamp: any;
-// }
 @Injectable({
   providedIn: 'root',
 })
@@ -37,10 +34,21 @@ export class AuthService {
 
   // Expose the observable (so other components can subscribe)
   isLoggedIn$: Observable<boolean> = this.isLoggedInSubject.asObservable();
-  constructor(private httpclient: HttpClient, private router: Router) {}
+  localId!: any;
+  constructor(private httpclient: HttpClient, private router: Router, private store: Store) {}
+
+  getlocalidfrmstr() {
+    this.store.select(selectLocalId).subscribe((localId) => {
+       this.localId=localId
+       console.log(localId + ' from store');
+     });
+  }
+
   // Method to log in (You can replace this with real authentication logic)
   login() {
     this.isLoggedInSubject.next(true); // Set login state to true
+    this.getlocalidfrmstr();
+    console.log("from auth service")
   }
 
   // Method to log out
@@ -166,7 +174,7 @@ export class AuthService {
   }
 
   getuserposts(): Observable<Posts[]> {
-    const localId = localStorage.getItem('localId'); // Retrieve the user ID from localStorage
+        const localId = localStorage.getItem('localId');
 
     return this.httpclient
       .get<Posts[]>(
@@ -207,6 +215,7 @@ export class AuthService {
 
   getuserdata(): Observable<userdetails[]> {
     const localId = localStorage.getItem('localId');
+    this.getlocalidfrmstr();
 
     return this.httpclient
       .get<userdetails[]>(
