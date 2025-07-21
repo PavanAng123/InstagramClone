@@ -25,7 +25,7 @@
                                 <li *ngIf="isLoggedIn"><a class="btn" [routerLink]="['/chats']">Chats</a></li>
                                 <li *ngIf="isLoggedIn"><a class="btn" [routerLink]="['/edit-profile']">EditProfile</a>
                                 </li>
-                                <li><app-dashboard/></li>
+                                <li *ngIf="isLoggedIn"><app-dashboard/></li>
                                 <li *ngIf="isLoggedIn"><a class="btn" (click)="logout()">Logout</a></li>
                         </ul>
                 </div>
