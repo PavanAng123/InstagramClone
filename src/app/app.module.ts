@@ -33,7 +33,6 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideDatabase, getDatabase } from '@angular/fire/database';
 
 
-import { environment } from './environment';
 import { CommonModule } from '@angular/common';
 
 
@@ -63,13 +62,6 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule,
     HttpClientModule,
     CommonModule,
-    StoreModule.forRoot({ auth: authReducer, user: userReducer }), // Register the reducer
-    StoreDevtoolsModule.instrument({ maxAge: 25 }), // Optional: for debugging
-
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    provideDatabase(() => getDatabase()),
-    provideStorage(() => getStorage()),
-    provideFirestore(() => getFirestore()),
   ],
   providers: [
     AuthService,
