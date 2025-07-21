@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { comntdata } from '../displayposts/displayposts.model';
-import {
-  Firestore,
-} from '@angular/fire/firestore';
+
 
 @Component({
   selector: 'app-myaccount',
@@ -48,22 +46,22 @@ export class MyaccountComponent implements OnInit {
     }
   }
 
-  upload(): void {
-    if (!this.selectedFile) return;
+  // upload(): void {
+  //   if (!this.selectedFile) return;
 
-    this.isUploading = true;
-    this.authservice
-      .uploadImage(this.selectedFile)
-      .then((url) => {
-        this.imageUrl = url;
-        this.isUploading = false;
-        console.log('Image uploaded. URL:', url);
-      })
-      .catch((error) => {
-        console.error('Upload failed:', error);
-        this.isUploading = false;
-      });
-  }
+  //   this.isUploading = true;
+  //   this.authservice
+  //     .uploadImage(this.selectedFile)
+  //     .then((url) => {
+  //       this.imageUrl = url;
+  //       this.isUploading = false;
+  //       console.log('Image uploaded. URL:', url);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Upload failed:', error);
+  //       this.isUploading = false;
+  //     });
+  // }
 
   editProfile() {
     this.router.navigate(['/edit-profile']);

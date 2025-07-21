@@ -13,8 +13,6 @@ import { comntdata, Posts } from './displayposts/displayposts.model';
 import { userdetails } from './myaccount/myaccount.model';
 import { selectLocalId } from './auth.selector';
 import { Store } from '@ngrx/store';
-import { ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
-import { Storage } from '@angular/fire/storage';
 
 
 export interface authresponse {
@@ -42,7 +40,6 @@ export class AuthService {
     private httpclient: HttpClient,
     private router: Router,
     private store: Store,
-    private storage: Storage // Inject Angular Fire Storage
   ) {}
   getlocalidfrmstr() {
     this.store.select(selectLocalId).subscribe((localId) => {
@@ -135,14 +132,6 @@ export class AuthService {
         profilePicture: profilePicture,
       }
     );
-  }
-
-
-
-  uploadImage(file: File): Promise<string> {
-    const filePath = `images/${Date.now()}_${file.name}`;
-    const storageRef = ref(this.storage, filePath); // Create a reference to the file in Firebase Storage
-    return uploadBytes(storageRef, file).then(() => getDownloadURL(storageRef)); // Upload the file and return the download URL
   }
 
   modifyPostsInfo(postId: string, payload: any) {

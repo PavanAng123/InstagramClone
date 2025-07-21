@@ -26,13 +26,6 @@ import { LoadingInterceptor } from './loading.interceptor';
 import { authReducer } from './auth.reducer'; // Ensure this path is correct
 import { AuthService } from './auth.service';
 import { userReducer } from './auth.reducer';
-
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { provideStorage, getStorage } from '@angular/fire/storage';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
-import { provideDatabase, getDatabase } from '@angular/fire/database';
-
-
 import { CommonModule } from '@angular/common';
 
 
@@ -62,6 +55,10 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule,
     HttpClientModule,
     CommonModule,
+    StoreModule.forRoot({ auth: authReducer, user: userReducer }), // Register the reducer
+    StoreDevtoolsModule.instrument({ maxAge: 25 }), // Optional: for debugging
+
+  
   ],
   providers: [
     AuthService,
