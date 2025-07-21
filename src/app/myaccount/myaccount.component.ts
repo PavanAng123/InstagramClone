@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { comntdata } from '../displayposts/displayposts.model';
-
+import {
+  Firestore,
+} from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-myaccount',
@@ -22,6 +24,10 @@ export class MyaccountComponent implements OnInit {
 
   userdetails: any[] = [];
 
+  selectedFile!: File;
+  imageUrl: string = '';
+  isUploading: boolean = false;
+
   constructor(private authservice: AuthService, private router: Router) {}
   userPosts: any[] = [];
   userdata: any[] = [];
@@ -34,6 +40,31 @@ export class MyaccountComponent implements OnInit {
     this.fetchcmnts();
     this.fetchUsers();
   }
+
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+    }
+  }
+
+  upload(): void {
+    if (!this.selectedFile) return;
+
+    this.isUploading = true;
+    this.authservice
+      .uploadImage(this.selectedFile)
+      .then((url) => {
+        this.imageUrl = url;
+        this.isUploading = false;
+        console.log('Image uploaded. URL:', url);
+      })
+      .catch((error) => {
+        console.error('Upload failed:', error);
+        this.isUploading = false;
+      });
+  }
+
   editProfile() {
     this.router.navigate(['/edit-profile']);
   }
@@ -50,7 +81,7 @@ export class MyaccountComponent implements OnInit {
   fetchuserdetails() {
     this.authservice.getuserdata().subscribe((userdetails) => {
       this.userdata = userdetails;
-      console.log(this.userdata);
+      console.log(this.userdata, ':::::::::');
     });
   }
 
@@ -169,7 +200,6 @@ export class MyaccountComponent implements OnInit {
     document.body.style.overflow = 'hidden';
   }
 
-
   toggleUserSelection(user: any) {
     const index = this.selectedUsers.indexOf(user.userid);
 
@@ -178,6 +208,10 @@ export class MyaccountComponent implements OnInit {
     } else {
       this.selectedUsers.splice(index, 1); // Remove user if deselected
     }
+  }
+
+  getUserById(userId: number): any {
+    return this.userdetails.find((user) => user.userid === userId);
   }
 
   sharePostToBackend() {

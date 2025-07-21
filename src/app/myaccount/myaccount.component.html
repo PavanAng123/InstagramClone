@@ -3,6 +3,14 @@
     <div class="row" *ngFor="let userdetails of userdata">
       <div class="col-sm-3">
         <img [src]="userdetails.profilePicture" class="post-image" />
+        <span></span>
+              <!-- <div>
+          <input type="file" (change)="onFileSelected($event)">
+          <button (click)="upload()" [disabled]="isUploading">Upload</button>
+        
+          <p *ngIf="isUploading">Uploading...</p>
+          <img *ngIf="imageUrl" [src]="imageUrl" width="200" />
+        </div> -->
       </div>
       <h3>{{userdetails.Username}} </h3>
       <p>{{userdetails.bio}}</p>
@@ -19,16 +27,22 @@
   <div class="grid-container">
     <div class="post-card" *ngFor="let post of userPosts">
       <div class="content">
-        <div class="row">
-          <div class="col-sm-3">
-            <img [src]="post.profilePicture" class="profpic" alt="profile picture">
+        <div class="row" >
+          <div class="col-sm-3 " >
+          <ng-container  *ngFor="let userdetail of userdetails">
+            <img  *ngIf="userdetail.userid === post.userid" [src]="userdetail.profilePicture" class="profpic" alt="profile picture">
+          </ng-container>
           </div>
-          <div class="col-sm-7">
-            <h4>{{post.Username}}</h4>
+          <div class="col-sm-6 userdetails" >
+            <ng-container  *ngFor="let userdetail of userdetails">
+            <h4  *ngIf="userdetail.userid === post.userid" >{{userdetail.Username}}</h4>
+          </ng-container>
           </div>
-          <div class="col-sm-1 editpst" title="Edit post" (click)="fetchPostById(post.id)">
+          
+          <div class="col-sm-1 editpst"  title="Edit post" (click)="fetchPostById(post.id)">
             <img src="assets/write.png" class="editdot" />
           </div>
+         
         </div>
   
         <div class="textcenter">
@@ -90,14 +104,17 @@
   
         <!-- Like Profiles -->
         <div class="justify" *ngIf="post.likeruserpropics" (click)="openlikeusers(post)">
-          <div class="col-sm-1 propics" *ngFor="let propis of post.likeruserpropics| slice:0:3">
-            <img class="likepropics" [src]="propis" />
+          <div class="col-sm-1 propics" *ngFor="let likeuserid of post.likeusersdata| slice:0:3">
+            <ng-container *ngFor="let userdetail of userdetails">
+              <img *ngIf="userdetail.userid === likeuserid" class="likepropics" [src]="userdetail.profilePicture" />
+            </ng-container>
           </div>
           <div class="col-sm-9" style="padding: 8px 0px 0px 10px;">
             <span *ngIf="post.likeruserpropics.length >3">&nbsp;& {{post.clickCount-3}} other's</span>
             <span>&nbsp;liked your post</span>
           </div>
         </div>
+        
       </div>
     </div>
   </div>
@@ -140,21 +157,20 @@
       <div class="col-sm-8 cmt ">Liked Users</div>
       <div class="close-button col-sm-3 text-right " (click)="closeModal()">Close <span> X</span> </div>
     </div>
-  <div class="row d-flex align-items-start">
+  <div class="row d-flex align-items-start" *ngFor="let likeduser of selectedPost.likeusersdata">
     <!-- Left Column: Profile Pictures -->
-    <div class="col-sm-2 d-flex flex-column">
-      <div *ngFor="let propis of selectedPost.likeruserpropics">
-        <img class="likestyle" [src]="propis" />
+    <ng-container  *ngFor="let userdetail of userdetails">
+    <div *ngIf="userdetail.userid === likeduser">
+      <div class="col-sm-2 d-flex flex-column"  >
+        <img  class="likestyle" [src]="userdetail.profilePicture" />
+      </div>
+      <!-- Right Column: Usernames -->
+      <div class="col-sm-10 d-flex flex-column ">
+        <span class="likestyle" style="white-space: nowrap;" >{{userdetail.Username}}</span> 
       </div>
     </div>
-  
-    <!-- Right Column: Usernames -->
-    <div class="col-sm-10 d-flex flex-column ">
-      <div class="likestyle " *ngFor="let Username of selectedPost.likeusername">
-       <span >{{Username}}</span> 
-       
-      </div>
-    </div>
+    </ng-container>
+
   </div>
       
     </div>

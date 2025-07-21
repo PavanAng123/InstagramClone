@@ -3,21 +3,42 @@
         <h2 *ngIf="!isEditMode" class="text-center">SIGN UP</h2>
         <h2 *ngIf="isEditMode" class="text-center">Edit Details</h2>
 
+        <div style="border: groove black; padding: 16px;  border-radius: 8px;">
         <div class="form-group row">
             <div class="col-sm-3">
                 <label>First Name </label>
-                    <input type="text" name="firstname" [(ngModel)]="userData.firstname" class="form-control" required>
-
+                <input type="text"
+                name="firstname"
+                [(ngModel)]="userData.firstname"
+                class="form-control"
+                required
+                #firstnameCtrl="ngModel">
+         
+         <div class="text-danger" *ngIf="firstnameCtrl.invalid && (firstnameCtrl.dirty || firstnameCtrl.touched)">
+           <div *ngIf="firstnameCtrl.errors?.['required']">
+             First Name should not be empty.
+           </div>
+         </div>
             </div>
             <div class="col-sm-3">
                 <label>Last Name </label>
-                <input type="text" class="form-control" name="lastname" [(ngModel)]="userData.lastname" required id="lastname"
+                <input type="text" class="form-control" name="lastname" [(ngModel)]="userData.lastname" #lastnamectrl="ngModel" required id="lastname"
                     placeholder="Enter lastname">
+                    <div class="text-danger" *ngIf="lastnamectrl.invalid && (lastnamectrl.dirty || lastnamectrl.touched)">
+                        <div *ngIf="lastnamectrl.errors?.['required']">
+                            lastname should not be empty.
+                        </div>
+                        </div>
             </div>
             <div class="col-sm-3">
-            <label>Profile Picture</label>
-            <input type="text" class="form-control" name="profilePicture" id="profilePicture"  [(ngModel)]="userData.profilePicture">
-        </div>
+                <label>ProfilePicture</label>
+                <input type="text" class="form-control" name="profilePicture" id="profilePicture" #ProfilePicture="ngModel" required [(ngModel)]="userData.profilePicture">
+                <div class="text-danger" *ngIf="ProfilePicture.invalid && (ProfilePicture.dirty || ProfilePicture.touched)">
+                    <div *ngIf="ProfilePicture.errors?.['required']">
+                        ProfilePicture should not be empty.
+                    </div>
+                </div>
+            </div>
         <div class="col-sm-3">
             <img [src]="userData.profilePicture" alt="image">
         </div>
@@ -25,26 +46,30 @@
         <div class="col-sm-3">
             <label>Username</label>
         
-            <input type="text" class="form-control" name="Username" [(ngModel)]="userData.Username" required id="Username"
+            <input type="text" class="form-control" name="Username" [(ngModel)]="userData.Username" #usernamectrl="ngModel" required id="Username"
                 placeholder="Enter Username">
+                <div class="text-danger" *ngIf="usernamectrl.invalid && (usernamectrl.dirty || usernamectrl.touched)">
+                    <div *ngIf="usernamectrl.errors?.['required']">
+                        Username should not be empty.
+                    </div>
+                </div>
         </div>
         <div class="col-sm-3">
             <label>Bio </label>
-            <input type="text" class="form-control" name="bio" [(ngModel)]="userData.bio" required id="bio"
+            <input type="text" class="form-control" name="bio" [(ngModel)]="userData.bio" #bioctrl="ngModel" required id="bio"
                 placeholder="Enter bio">
-        </div>
-        </div>
 
-        <div class="form-group row">
-            
-
+                <div class="text-danger" *ngIf="bioctrl.invalid && (bioctrl.dirty || bioctrl.touched)">
+                    <div *ngIf="bioctrl.errors?.['required']">
+                        Bio should not be empty.
+                    </div>   
+                </div>
         </div>
-        
-
+        </div>   
         <div>
             <button clas="text-right" type="submit" [disabled]="!loginForm.valid"
                 class="btn btn-primary">Submit</button>
-
+        </div>
         </div>
     </form>
 </div>

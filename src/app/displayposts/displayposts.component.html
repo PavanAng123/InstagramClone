@@ -1,11 +1,17 @@
 <div class="cotainer">
+<div class="">
+    <app-response/>
+</div>
+
     <div *ngIf="posts.length>0">
         <div class="posts-container">
             <div class="posts" *ngFor="let post of posts">
-                <div class="content">
-                    <div class="profile">
-                        <img class="imgcls" [src]="post.profilePicture" alt="">
-                        <h4>{{ post.Username }}</h4>
+                <div class="content" > 
+                    <div class="profile" *ngFor="let userdetail of userdetails">
+                        <ng-container *ngIf="post.userid === userdetail.userid">
+                            <img  class="imgcls" [src]="userdetail.profilePicture" alt="">
+                            <h4 >{{ userdetail.Username }}</h4>
+                        </ng-container>
                     </div>
                     <div class="title">
                         <h6>{{ post.title }}</h6>
@@ -83,10 +89,10 @@
             <div *ngIf="hasComments">
                 <div *ngFor="let comment of filteredComments">
                     <div class="comments-container">
-                        <div class="row">
-                            <div class="col-sm-11 row">
+                        <div class="row" *ngFor="let userdetail of userdetails">
+                            <div class="col-sm-11 row" *ngIf="comment.userId===userdetail.userid"  >
                                 <div class="col-sm-2">
-                                    <img style="height: 50px; width: 50px;" [src]="comment.profilePicture">
+                                    <img  style="height: 50px; width: 50px;" [src]="userdetail.profilePicture">
                                 </div>
                                 <span class="col-sm-9">{{ comment.Username }}</span>
                                 <p class="col-sm-9">
@@ -94,10 +100,12 @@
                                 </p>
                             </div>
 
-                            <div *ngIf="comment.userId === localId" class="col-sm-1">
-                                <span><img class="deletebtn" src="assets/delete.png"
-                                        (click)="deleteComment(comment.id)" /></span>
-                            </div>
+                            <ng-container *ngIf="comment.userId===userdetail.userid">
+                                <div *ngIf="comment.userId === localId" class="col-sm-1">
+                                    <span><img class="deletebtn" src="assets/delete.png" (click)="deleteComment(comment.id)" /></span>
+                                </div>
+                            </ng-container>
+
 
                         </div>
                     </div>

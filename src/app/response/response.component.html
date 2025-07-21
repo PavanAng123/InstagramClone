@@ -1,1 +1,16 @@
-<p>response works!</p>
+
+<div class="row otrexplginusr" *ngFor="let user of userdetails">
+    <ng-container class="" *ngIf="user.userid === localId">
+    <div class="col-sm-1">
+        <img [src]="user.profilePicture">
+    </div>
+    </ng-container>
+   
+</div>
+<div class="row " *ngFor="let user of userdetails">
+    <div class="" *ngIf="user.userid !== localId">
+    <div class="col-sm-1">
+            <img [src]="user.profilePicture">
+        </div>
+    </div>
+</div>

@@ -9,12 +9,22 @@
         <div class="form-group">
            <label>Email: </label>
        
-            <input type="email" class="form-control" name="email" ngModel required id="email"  placeholder="Enter Email">
+            <input type="email" class="form-control" name="email" ngModel #email="ngModel" required id="email"  placeholder="Enter Email">
+            <div class="text-danger" *ngIf="email.invalid && (email.dirty || email.touched)">
+                <div *ngIf="email.errors?.['required']">
+                   Email-id is Required.
+                </div>
+                </div>
         </div> 
             
         <div class="form-group">
             <label>Password </label>
-                <input type="password" class="form-control" name="password" id="Password" ngModel required minlength="8" placeholder="Please Enter Password" >
+                <input type="password" class="form-control" name="password" id="Password" ngModel #password="ngModel" required minlength="8" placeholder="Please Enter Password" >
+                <div class="text-danger" *ngIf="password.invalid && (password.dirty || password.touched)">
+                    <div *ngIf="password.errors?.['required']">
+                        Password should contain 8 characters.
+                    </div>
+                    </div>
             </div>
             <button type="submit" [disabled]="!AuthForm.valid" class="btn btn-primary">Login</button>|
             <button type="button" (click)="Tosignup()" class="btn btn-primary">signup</button>

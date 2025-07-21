@@ -16,7 +16,7 @@ export class Authgaurd implements CanActivate{
         if (!isloggedin) {
             this.router.navigate(['/login'])
             this.localStorage.removeItem('localId');
-            return false
+            return false;
             
 
         } else {

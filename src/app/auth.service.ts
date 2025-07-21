@@ -13,6 +13,9 @@ import { comntdata, Posts } from './displayposts/displayposts.model';
 import { userdetails } from './myaccount/myaccount.model';
 import { selectLocalId } from './auth.selector';
 import { Store } from '@ngrx/store';
+import { ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
+import { Storage } from '@angular/fire/storage';
+
 
 export interface authresponse {
   idToken: string;
@@ -35,20 +38,24 @@ export class AuthService {
   // Expose the observable (so other components can subscribe)
   isLoggedIn$: Observable<boolean> = this.isLoggedInSubject.asObservable();
   localId!: any;
-  constructor(private httpclient: HttpClient, private router: Router, private store: Store) {}
-
+  constructor(
+    private httpclient: HttpClient,
+    private router: Router,
+    private store: Store,
+    private storage: Storage // Inject Angular Fire Storage
+  ) {}
   getlocalidfrmstr() {
     this.store.select(selectLocalId).subscribe((localId) => {
-       this.localId=localId
-       console.log(localId + ' from store');
-     });
+      this.localId = localId;
+      console.log(localId + ' from store');
+    });
   }
 
   // Method to log in (You can replace this with real authentication logic)
   login() {
     this.isLoggedInSubject.next(true); // Set login state to true
     this.getlocalidfrmstr();
-    console.log("from auth service")
+    console.log('from auth service');
   }
 
   // Method to log out
@@ -103,6 +110,7 @@ export class AuthService {
       }
     );
   }
+
   updateUserInFirebase(firebaseId: string, updatedData: any) {
     return this.httpclient.patch(
       `https://application-clone-7f061-default-rtdb.firebaseio.com/aftersignup/${firebaseId}.json`,
@@ -127,6 +135,14 @@ export class AuthService {
         profilePicture: profilePicture,
       }
     );
+  }
+
+
+
+  uploadImage(file: File): Promise<string> {
+    const filePath = `images/${Date.now()}_${file.name}`;
+    const storageRef = ref(this.storage, filePath); // Create a reference to the file in Firebase Storage
+    return uploadBytes(storageRef, file).then(() => getDownloadURL(storageRef)); // Upload the file and return the download URL
   }
 
   modifyPostsInfo(postId: string, payload: any) {
@@ -174,7 +190,7 @@ export class AuthService {
   }
 
   getuserposts(): Observable<Posts[]> {
-        const localId = localStorage.getItem('localId');
+    const localId = localStorage.getItem('localId');
 
     return this.httpclient
       .get<Posts[]>(
@@ -368,7 +384,11 @@ export class AuthService {
   }
 
   // Fetch chat history between two users
-  getChatHistory(user1: string, user2: string, skipLoader: boolean = false): Observable<any[]> {
+  getChatHistory(
+    user1: string,
+    user2: string,
+    skipLoader: boolean = false
+  ): Observable<any[]> {
     const headers = skipLoader
       ? new HttpHeaders({ 'X-Skip-Loader': 'true' })
       : new HttpHeaders(); // instead of undefined

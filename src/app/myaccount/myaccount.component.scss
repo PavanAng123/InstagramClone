@@ -7,6 +7,10 @@
     right: -36px;
     padding: 10px !important;
 }
+.userdetails{
+    margin: 5px;
+    flex-wrap: wrap;
+}
 
 // .carousel {
 //     position: static;
@@ -347,4 +351,22 @@ border-bottom: 1px solid black;
     right: 0 !important;
     position: absolute;
         top: 45% !important;
+}
+
+
+.upload-box {
+    margin-bottom: 20px;
+}
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.gallery-item img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
 }

@@ -1,53 +1,62 @@
-
-
 <form [formGroup]="createForm" (ngSubmit)="createposts(createForm)">
-    <div class="row">
-        <div class="col-sm-7">
-            <label>Title</label>
-            <input type="text" formControlName="title" class="form-control" placeholder="Please enter post title" />
-        </div>
-        <div class="col-sm-7">
-            <label>Content</label>
-            <input type="text" formControlName="content" class="form-control"
-                placeholder="Please enter content for your post" />
-        </div>
-    </div>
-    <div  class="row " formArrayName="images">
-        <div class="col-sm-12" *ngFor="let image of imageControls.controls; let i = index">
-            <div  class="" *ngIf="this.imageControls.length<=6 " >
+<div class="bdr-btm">
+  <h4>Create Post</h4>
+</div>
 
-            
-            <div class=" image col-sm-7">
-                <label>Image URL</label>
-                <input type="text" [formControlName]="i" class="form-control" placeholder="Please enter image URL" />
-            </div>
-            <div class="col-sm-3">
-<img [src]="image.value || 'data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA='" alt="Post image"
-    class="placeholder-img" />
+  <div class="row">
+    <div class="col-sm-7">
+      <label>Title</label>
+      <input type="text" formControlName="title" class="form-control" placeholder="Please enter post title" />
+      <div class="text-danger"
+        *ngIf="createForm.get('title')?.invalid && (createForm.get('title')?.dirty || createForm.get('title')?.touched)">
+        <div *ngIf="createForm.get('title')?.errors?.['required']">Title is required.</div>
+        <div *ngIf="createForm.get('title')?.errors?.['maxlength']">Title cannot exceed 100 characters.</div>
+      </div>
+    </div>
+    <div class="col-sm-7">
+      <label>Content</label>
+      <input type="text" formControlName="content" class="form-control"
+        placeholder="Please enter content for your post" />
+      <div class="text-danger"
+        *ngIf="createForm.get('content')?.invalid && (createForm.get('content')?.dirty || createForm.get('content')?.touched)">
+        <div *ngIf="createForm.get('content')?.errors?.['required']">Content is required.</div>
+        <div *ngIf="createForm.get('content')?.errors?.['maxlength']">Content cannot exceed 500 characters.</div>
+      </div>
+    </div>
+  </div>
 
-            </div>
-            <!-- <button type="button" class="btn btn-danger" (click)="removeImage(i)">Remove</button> -->
-            
-            <div *ngIf="this.imageControls.length>=2 " class="col-sm-1">
-                <app-buttonoutput [imageControls]="imageControls" (removeImageEvent)="removeImage(i)" ></app-buttonoutput>
-            </div>
-            <hr class="col-sm-12" *ngIf="this.imageControls.length>=2" >
+  <div class="row" formArrayName="images">
+    <div class="col-sm-12" *ngFor="let image of imageControls.controls; let i = index">
+      <div *ngIf="imageControls.length <= 6">
+        <div class="image col-sm-7">
+          <label>Image URL</label>
+          <input type="text" [formControlName]="i" class="form-control" placeholder="Please enter image URL" />
+          <div class="text-danger" *ngIf="image.invalid && (image.dirty || image.touched)">
+            <div *ngIf="image.errors?.['required']">Image URL is required.</div>
+          </div>
         </div>
-        
-    </div>
-    </div>
-
-    <div *ngIf="this.imageControls.length>=6 ">
-        <p>You've reached maximum limit for uploading Images</p>
-    </div>
-    <div class="row btnsec">
-        <div class="col-sm-2" *ngIf="this.imageControls.length < 6">
-            <button type="button" class="btn btn-success" (click)="addImage()">Add More Image</button>
+        <div class="col-sm-3">
+          <img [src]="image.value || 'data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA='" alt="Post image"
+            class="placeholder-img" style="max-height: 80px; max-width: 120px;" />
         </div>
-       <div class="col-sm-2">
-
-           <button type="submit" class="btn btn-primary" [disabled]="createForm.invalid">Create Post</button> 
-       </div>
+        <div *ngIf="imageControls.length > 1" class="col-sm-1">
+          <button type="button" class="btn btn-danger" (click)="removeImage(i)">Remove</button>
+        </div>
+        <hr class="col-sm-12" *ngIf="imageControls.length > 1">
+      </div>
     </div>
-    
+  </div>
+
+  <div *ngIf="imageControls.length >= 6">
+    <p>You've reached the maximum limit for uploading Images</p>
+  </div>
+
+  <div class="row btnsec">
+    <div class="col-sm-2" *ngIf="imageControls.length < 6">
+      <button type="button" class="btn btn-success" (click)="addImage()">Add More Image</button>
+    </div>
+    <div class="col-sm-2">
+      <button type="submit" class="btn btn-primary" [disabled]="createForm.invalid">Create Post</button>
+    </div>
+  </div>
 </form>

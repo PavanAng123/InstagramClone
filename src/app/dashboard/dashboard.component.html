@@ -23,9 +23,9 @@
 </div>
 </div>
 
-<ng-container *ngIf="filteredUsers.length === 0">
+<!-- <ng-container *ngIf="filteredUsers.length === 0">
      <app-inputandoutput [norecord1]="norecor"></app-inputandoutput>
-</ng-container>
+</ng-container> -->
 
 <div *ngIf="showonlyuserposts">
 
@@ -74,29 +74,6 @@
 
                 <p>{{ post.content }}</p>
             </div>
-
-            <!-- Actions: Like, Comment, Share -->
-            <!-- <div class="actions">
-                <hr>
-                <a *ngIf="!isLiked(post.id)" (click)="updateCount(post.id, true)">
-                    <img class="profilepic" src="assets/like.png">
-                    <span>{{ likedataa[post.id]?.clickCount }}</span>
-                </a>
-
-                <a *ngIf="isLiked(post.id)" (click)="updateCount(post.id, false)">
-                    <img class="profilepic" src="assets/heart.png">
-                    <span>{{ likedataa[post.id]?.clickCount }}</span>
-                </a>
-
-                <a (click)="comntsec(post.id)">
-                    <img class="profilepic" src="assets/chat.png">
-                    <span>{{ getCommentCount(post.id) }}</span>
-                </a>
-
-                <a (click)="sharePost(post.id)">
-                    <img class="profilepic" src="assets/send.png">
-                </a>
-            </div> -->
         </div>
 
 </div>

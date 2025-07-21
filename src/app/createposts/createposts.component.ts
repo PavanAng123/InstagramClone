@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
@@ -8,25 +8,49 @@ import { Router } from '@angular/router';
   templateUrl: './createposts.component.html',
   styleUrls: ['./createposts.component.scss'],
 })
-export class CreatepostsComponent {
+export class CreatepostsComponent implements OnInit {
   createForm!: FormGroup;
-  index: number = 0;
-  // postId: any;
-  // localIdWithNumber!: string;
-  // currentpostnumber = 0;
+
   constructor(
     private authservice: AuthService,
     private fb: FormBuilder,
     private router: Router
   ) {}
 
-  createposts(createForm: FormGroup) {
-    const { title, content, images } = createForm.value; // Destructure form values
-    // Validate and prepare data to send to the backend
+  ngOnInit(): void {
+    this.createForm = this.fb.group({
+      title: ['', [Validators.required, Validators.maxLength(100)]],
+      content: ['', [Validators.required, Validators.maxLength(500)]],
+      images: this.fb.array([this.fb.control('', [Validators.required])]),
+    });
+  }
+
+  get imageControls(): FormArray {
+    return this.createForm.get('images') as FormArray;
+  }
+
+  addImage(): void {
+    if (this.imageControls.length < 6) {
+      this.imageControls.push(this.fb.control('', [Validators.required]));
+    }
+  }
+
+  removeImage(index: number): void {
+    if (this.imageControls.length > 1) {
+      this.imageControls.removeAt(index);
+    }
+  }
+
+  createposts(form: FormGroup) {
+    if (form.invalid) {
+      form.markAllAsTouched();
+      return;
+    }
+    const { title, content, images } = form.value;
     const postPayload = {
       title,
       content,
-      imageurl: images, // Send all image URLs (array)
+      imageurl: images,
     };
 
     this.authservice
@@ -38,7 +62,12 @@ export class CreatepostsComponent {
       .subscribe({
         next: (res) => {
           console.log('Post created successfully:', res);
-          createForm.reset(); // Reset the form after successful submission
+          form.reset();
+          // Reset images array to have at least one empty control after reset
+          while (this.imageControls.length !== 1) {
+            this.imageControls.removeAt(0);
+          }
+          this.imageControls.at(0).setValue('');
           alert('Post created successfully!');
           this.router.navigate(['/myaccount']);
         },
@@ -48,28 +77,4 @@ export class CreatepostsComponent {
         },
       });
   }
-
-  ngOnInit(): void {
-    this.createForm = this.fb.group({
-      title: ['', Validators.required],
-      content: ['', Validators.required],
-      images: this.fb.array([
-        this.fb.control('', Validators.required), // Initialize with one image field
-      ]),
-    });
-  }
-
-  get imageControls(): FormArray {
-    return this.createForm.get('images') as FormArray;
-  }
-
-  addImage(): void {
-    this.imageControls.push(this.fb.control('', Validators.required));
-    console.log(this.imageControls.value);
-  }
-
-  removeImage(index: number): void {
-    this.imageControls.removeAt(index);
-  }
-
 }

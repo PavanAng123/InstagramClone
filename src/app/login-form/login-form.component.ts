@@ -46,7 +46,7 @@ export class LoginFormComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     const formData = form.value;
-
+    Object.values(form.controls).forEach((ctrl) => ctrl.markAsTouched());
     // Store to localStorage
     localStorage.setItem('Username', formData.Username);
     localStorage.setItem('profilePicture', formData.profilePicture);

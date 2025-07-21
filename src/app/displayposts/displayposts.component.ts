@@ -41,7 +41,7 @@ export class DisplaypostsComponent implements OnInit {
       next: (data) => {
         // Assuming API returns an object and you need to convert it to an array
         this.userdetails = Object.values(data); // Converts object values into an array
-        console.log(this.userdetails);
+        console.log(this.userdetails)
       },
       error: (err) => {
         console.error('Error fetching user details:', err);
@@ -71,6 +71,8 @@ export class DisplaypostsComponent implements OnInit {
       },
     });
   }
+
+
 
   fetchcmnts() {
     this.authservice.getcomnts().subscribe({
